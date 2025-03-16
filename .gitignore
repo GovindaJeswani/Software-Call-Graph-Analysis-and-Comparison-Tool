@@ -1,0 +1,25 @@
+# Ignore compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore temporary output files
+*.gv
+*.png
+*.json
+*.dot
+*.md
+
+# Ignore virtual environments
+venv/
+.env/
+
+# Ignore old and new framework versions
+oldVersion/
+newVersion/
+flaskVersion/
+fastAPIVersion/
+
+# Ignore zip files (if we store framework versions in ZIPs/)
+ZIPs/
+*.zip
