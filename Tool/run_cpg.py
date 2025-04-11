@@ -1,28 +1,45 @@
 import os
 import subprocess
 
-# Paths
-PROJECTS_DIR = "../Projects"
-CPG_DIR = "../CPG"
+# Set the full path to Joern's batch file.
+JOERN_PATH = "D:/joern-cli/joern-cli/joern.bat"
 
-def generate_cpg():
-    """Runs Joern on each extracted project to generate a CPG."""
-    os.makedirs(CPG_DIR, exist_ok=True)
+# Absolute paths for Modules and Results directories.
+MODULES_DIR = os.path.abspath("../Modules")
+RESULTS_DIR = os.path.abspath("../Results")
 
-    for project in os.listdir(PROJECTS_DIR):
-        project_path = os.path.join(PROJECTS_DIR, project)
-        cpg_output = os.path.join(CPG_DIR, f"{project}.cpg.bin")
+def run_cpg_analysis(module_name):
+    """Runs Joern to generate a Code Property Graph (CPG) for the given module."""
+    module_path = os.path.join(MODULES_DIR, module_name)
+    result_path = os.path.join(RESULTS_DIR, module_name)
+    os.makedirs(result_path, exist_ok=True)
 
-        if not os.path.exists(cpg_output):
-            print(f"🔍 Generating CPG for {project}...")
+    print(f"Running CPG analysis for {module_name}...")
+    
+    # Create a minimal Joern script that explicitly uses the Python frontend.
+    # Make sure the paths use forward slashes.
+    joern_script_content = (
+        f'importCode.python("{module_path}");\n'
+        f'cpg.save("{result_path}/cpg.bin");'
+    )
+    
+    # Write the script to a file, stripping extra whitespace.
+    script_path = os.path.abspath("joern_analysis.sc")
+    with open(script_path, "w", encoding="utf-8") as script_file:
+        script_file.write(joern_script_content.strip())
 
-            # Run Joern on the project
-            joern_cmd = f"joern --import {project_path} --output {cpg_output}"
-            subprocess.run(joern_cmd, shell=True, check=True)
+    # Debug: print the content of the generated Joern script.
+    print("Joern script content:")
+    print(joern_script_content)
 
-            print(f"✅ CPG saved as {cpg_output}\n")
-        else:
-            print(f"⚠️ CPG for {project} already exists, skipping...\n")
+    # Run Joern with the script.
+    try:
+        subprocess.run([JOERN_PATH, "--script", script_path], check=True)
+        print(f"CPG analysis completed: {result_path}/cpg.bin")
+    except subprocess.CalledProcessError as e:
+        print(f"Joern failed with error: {e}")
 
 if __name__ == "__main__":
-    generate_cpg()
+    for module in os.listdir(MODULES_DIR):
+        if os.path.isdir(os.path.join(MODULES_DIR, module)):
+            run_cpg_analysis(module)
