@@ -1,38 +1,29 @@
+# dot_to_json.py
+import sys
+import re
 import json
 
-def load_json(file):
-    """Loads a JSON file."""
-    with open(file, 'r') as f:
-        return json.load(f)
-
-def generate_diff(old_data, new_data):
-    """Generates a diff of function calls between two JSON data."""
-    old_calls = {f"{call['caller']} -> {call['callee']}" for call in old_data['function_calls']}
-    new_calls = {f"{call['caller']} -> {call['callee']}" for call in new_data['function_calls']}
-
-    diff = {
-        'added_calls': list(new_calls - old_calls),
-        'removed_calls': list(old_calls - new_calls)
-    }
-
-    return diff
-
-def save_diff_to_json(diff, output_json):
-    """Saves the diff to a JSON file."""
-    with open(output_json, 'w') as f:
-        json.dump(diff, f, indent=4)
-    print(f"✅ Diff saved as {output_json}")
+def dot_to_edges(dot_path):
+    edges = []
+    with open(dot_path, "r", encoding="utf-8") as f:
+        for line in f:
+            match = re.search(r'"(.+?)" -> "(.+?)"', line)
+            if match:
+                caller, callee = match.groups()
+                edges.append({"caller": caller, "callee": callee})
+    return edges
 
 if __name__ == "__main__":
-    # Load the old and new JSON files
-    old_json = "old_callgraph.json"
-    new_json = "new_callgraph.json"
+    module = sys.argv[1]
+    old_dot = f"../Results/{module}/old_callgraph.dot"
+    new_dot = f"../Results/{module}/new_callgraph.dot"
 
-    old_data = load_json(old_json)
-    new_data = load_json(new_json)
+    old_json = f"../Results/{module}/old_callgraph.json"
+    new_json = f"../Results/{module}/new_callgraph.json"
 
-    # Generate the diff
-    diff = generate_diff(old_data, new_data)
+    with open(old_json, "w") as f:
+        json.dump(dot_to_edges(old_dot), f, indent=2)
+    with open(new_json, "w") as f:
+        json.dump(dot_to_edges(new_dot), f, indent=2)
 
-    # Save the diff to a new file
-    save_diff_to_json(diff, "call_graphdiff.json")
+    print(f"✅ Converted to JSON for {module}")
