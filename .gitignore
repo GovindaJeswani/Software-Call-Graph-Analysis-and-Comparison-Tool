@@ -20,10 +20,11 @@ venv/
 # Ignore tool folders
 Tool/
 WithLLM/
+Modules/Flask
+
 # results/
 raw/
 src/
-Modules/
 Zips/
 
 # Ignore specific experiments or scripts
