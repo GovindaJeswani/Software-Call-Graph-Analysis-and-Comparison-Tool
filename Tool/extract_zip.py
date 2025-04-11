@@ -1,26 +1,25 @@
 import os
 import zipfile
 
-# Paths
-ZIP_DIR = "../ZIPs"
-EXTRACT_DIR = "../Projects"
+# Define folders
+ZIP_DIR = "../Zips"
+EXTRACT_DIR = "../Modules"
 
 def extract_zip_files():
-    """Extracts all ZIP files in ZIPs/ to Projects/."""
+    """Extracts ZIP files from Zips/ into Modules/."""
     os.makedirs(EXTRACT_DIR, exist_ok=True)
 
     for zip_file in os.listdir(ZIP_DIR):
         if zip_file.endswith(".zip"):
-            project_name = zip_file.replace(".zip", "")  # Extract project name
-            project_path = os.path.join(EXTRACT_DIR, project_name)
+            zip_path = os.path.join(ZIP_DIR, zip_file)
+            extract_folder = os.path.join(EXTRACT_DIR, zip_file.replace(".zip", ""))
 
-            if not os.path.exists(project_path):
-                print(f"📦 Extracting {zip_file} to {project_path}...")
-                with zipfile.ZipFile(os.path.join(ZIP_DIR, zip_file), 'r') as zip_ref:
-                    zip_ref.extractall(project_path)
-                print(f"✅ Extracted {zip_file} successfully!\n")
-            else:
-                print(f"⚠️ {project_name} already extracted, skipping...\n")
+            print(f"📦 Extracting {zip_file} to {extract_folder}...")
+
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_folder)
+
+            print(f"✅ Extraction complete: {extract_folder}")
 
 if __name__ == "__main__":
     extract_zip_files()

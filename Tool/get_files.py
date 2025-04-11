@@ -1,38 +1,37 @@
 import os
+import sys
 
-def get_relevant_files(project_folder):
-    """Finds all Python source files inside the 'src/' directory."""
-    dependency_files = []
-    source_files = []
+def get_relevant_files(module_name):
+    base_path = f"../Modules/{module_name}"
+    versions = ["old", "new"]
+    
+    for version in versions:
+        version_path = os.path.join(base_path, version)
+        print(f"\n=== {version.capitalize()} Version ===")
+        
+        py_files = []
+        for root, _, files in os.walk(version_path):
+            for file in files:
+                if file.endswith(".py"):
+                    py_files.append(os.path.join(root, file))
 
-    for root, _, files in os.walk(project_folder):  
-        # Skip unwanted folders like docs, tests, examples
-        if "docs" in root or "tests" in root or "examples" in root:
-            continue  
+        print(f"Total Python Files: {len(py_files)}")
+        print("Python Files:", py_files)
 
+def get_python_files(module_name, version):
+    base_path = f"../Modules/{module_name}/{version}"
+    py_files = []
+    for root, _, files in os.walk(base_path):
         for file in files:
-            file_path = os.path.join(root, file)
-            
-            # Identify dependency files
-            if file in ["requirements.txt", "setup.py", "pyproject.toml"]:
-                dependency_files.append(file_path)
-            
-            # Identify Python files (only from src/)
-            elif file.endswith(".py") and "src" in root:
-                source_files.append(file_path)
+            if file.endswith(".py"):
+                py_files.append(os.path.join(root, file))
+    return py_files
 
-    return dependency_files, source_files
 
 if __name__ == "__main__":
-    old_deps, old_src = get_relevant_files("../old_version")
-    new_deps, new_src = get_relevant_files("../new_version")
+    if len(sys.argv) < 2:
+        print("Please provide a module name as argument.")
+        sys.exit(1)
 
-    print("\n=== Old Version ===")
-    print("Dependencies:", old_deps)
-    print("Total Python Files:", len(old_src))
-    print("Python Files:", old_src[:10])  
-
-    print("\n=== New Version ===")
-    print("Dependencies:", new_deps)
-    print("Total Python Files:", len(new_src))
-    print("Python Files:", new_src[:10])  
+    module = sys.argv[1]
+    get_relevant_files(module)
