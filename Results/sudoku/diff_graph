@@ -1,0 +1,56 @@
+// Call Graph Diff
+digraph {
+	render_board
+	solve_board
+	int
+	open
+	input
+	is_game_complete
+	str
+	list
+	sorted
+	print
+	is_valid_move
+	draw_text
+	is_valid_group
+	load_high_scores
+	range
+	generate_board
+	save_high_score
+	get_cell_from_mouse
+	main
+	print_board
+	is_valid
+	print_board -> print [label=removed color=red]
+	main -> print_board [label=removed color=red]
+	print_board -> str [label=removed color=red]
+	main -> load_high_scores [label=added color=green]
+	is_valid_group -> range [label=added color=green]
+	is_game_complete -> is_valid_group [label=added color=green]
+	solve_board -> range [label=added color=green]
+	render_board -> range [label=added color=green]
+	main -> draw_text [label=added color=green]
+	save_high_score -> open [label=added color=green]
+	solve_board -> is_valid [label=added color=green]
+	render_board -> str [label=added color=green]
+	load_high_scores -> open [label=added color=green]
+	main -> get_cell_from_mouse [label=added color=green]
+	generate_board -> range [label=added color=green]
+	is_game_complete -> range [label=added color=green]
+	is_valid -> range [label=added color=green]
+	main -> render_board [label=added color=green]
+	is_valid_group -> sorted [label=added color=green]
+	solve_board -> solve_board [label=added color=green]
+	load_high_scores -> int [label=added color=green]
+	generate_board -> is_valid [label=added color=green]
+	main -> save_high_score [label=added color=green]
+	load_high_scores -> sorted [label=added color=green]
+	is_valid_group -> list [label=added color=green]
+	main -> is_valid_move [label=unchanged color=gray style=dotted]
+	main -> is_game_complete [label=unchanged color=gray style=dotted]
+	main -> print [label=unchanged color=gray style=dotted]
+	main -> generate_board [label=unchanged color=gray style=dotted]
+	main -> input [label=unchanged color=gray style=dotted]
+	main -> int [label=unchanged color=gray style=dotted]
+	is_valid_move -> range [label=unchanged color=gray style=dotted]
+}

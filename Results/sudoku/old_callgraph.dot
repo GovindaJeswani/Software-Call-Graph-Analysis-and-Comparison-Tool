@@ -1,0 +1,22 @@
+strict digraph {
+main;
+print;
+generate_board;
+is_game_complete;
+print_board;
+int;
+input;
+is_valid_move;
+str;
+range;
+main -> print;
+main -> generate_board;
+main -> is_game_complete;
+main -> print_board;
+main -> int;
+main -> input;
+main -> is_valid_move;
+print_board -> print;
+print_board -> str;
+is_valid_move -> range;
+}
